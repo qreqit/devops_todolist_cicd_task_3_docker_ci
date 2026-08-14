@@ -12,7 +12,6 @@ env:
   PythonVersion: 3.8
   DockerImageName: todoapp
 
-
 jobs:
   python-ci:
     runs-on: ubuntu-latest
@@ -57,13 +56,14 @@ jobs:
         with:
           name: python-artifacts
           path: .
+
   docker-ci:
     runs-on: ubuntu-latest
     if: ${{ github.ref_name == 'main' }}
     needs: python-ci
     steps:
-      - uses: actions/download-artifact@v6
-        name: Download python artifacts
+      - name: Download python artifacts
+        uses: actions/download-artifact@v4
         with:
           name: python-artifacts
           path: ./src/
@@ -83,4 +83,3 @@ jobs:
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.DockerImageName }}:latest
             ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.DockerImageName }}:${{ github.sha }}
-
